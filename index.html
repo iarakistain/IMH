@@ -1,0 +1,79 @@
+<!doctype HTML>
+<html>
+<title>Smartainer</title>
+<!--<script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>-->
+<!--<script src="https://rawgit.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>-->
+<!--<script src="https://raw.githack.com/jeromeetienne/AR.js/2.0.1/aframe/build/aframe-ar.js"></script>-->
+<!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
+<link rel="stylesheet" type="text/css" href="css/main.css" media="all">
+
+<script src="js/aframe.min.js"></script>
+<!--<script src="https://rawgit.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>-->
+<script src="js/aframe-ar.js"></script>
+<script>
+    window.addEventListener('camera-init', (data) => {
+        console.log('camera-init', data);
+    });
+    window.addEventListener('camera-error', (error) => {
+        console.log('camera-error', error);
+    });
+	
+	
+	document.addEventListener("DOMContentLoaded", function(event) {
+    document.getElementById("froga1").onclick = function(){
+		var infoPanel = document.getElementById("infoPanel");
+		//var charts = document.getElementById("chartContent");
+		//charts.src = "http://172.26.121.52:8888/sources/2/dashboards/1?lower=now%28%29%20-%2015m";
+		if(infoPanel.style.display==="block"){
+			infoPanel.style.display = "none";
+		}else{
+			infoPanel.style.display = "block";
+		}
+	}
+  });
+	AFRAME.registerComponent('registerevents', {
+		init: function () {
+			var marker = this.el;
+			marker.addEventListener('markerFound', function() {
+				var markerId = marker.id;
+				console.log('markerFound', markerId);
+				document.getElementById("froga1").style.display = "block";
+				// TODO: Add your own code here to react to the marker being found.
+			});
+			marker.addEventListener('markerLost', function() {
+				var markerId = marker.id;
+				console.log('markerLost', markerId);
+				document.getElementById("froga1").style.display = "none";
+				document.getElementById("infoPanel").style.display = "none";
+				// TODO: Add your own code here to react to the marker being lost.
+			});
+		}
+	});
+</script>
+  <body style='margin : 0px; overflow: hidden;'>
+  <!--<div id="infoPanel" style="display:none;"><iframe id="chartContent"></iframe> </div> -->
+  <!--<div id="infoPanel" style="display:none;"><iframe  src="https://projects.hei-tecnalia.com/RETOIVAN/redirect.html"></iframe> </div> -->
+	<div id="infoPanel" style="display:none;"><iframe id="chartContent" src="http://172.26.121.52:8888/sources/2/dashboards/2?lower=now%28%29%20-%2015m"></iframe> </div>
+	<div id="froga1" style="display:none;">i</div>
+    <a-scene embedded arjs='trackingMethod: best; debugUIEnabled: false'>
+      <a-assets>
+        <a-asset-item id="raspberry" src="models/raspberry_pi_cam_v2.1.glb"></a-asset-item>
+		<a-asset-item id="truck" src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMilkTruck/glTF-Embedded/CesiumMilkTruck.gltf"></a-asset-item>
+		<a-asset-item id="suzanne" src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Suzanne/glTF/Suzanne.gltf"></a-asset-item>
+      </a-assets>
+	  
+	  
+	   <a-marker id="heater01" type='pattern' url='markers/pattern-Marker_Heater_01.patt' registerevents>
+		<a-entity gltf-model="#truck"></a-entity>
+	  </a-marker>
+	  <a-marker id="lighting01" type='pattern' url='markers/pattern-Marker_Lighting_01.patt' registerevents>
+		<a-entity gltf-model="#suzanne"></a-entity>
+	  </a-marker>
+  	<a-marker id="hiro" preset="hiro" registerevents>
+      <a-entity gltf-model="#raspberry"  scale="0.15 0.15 0.15"></a-entity>
+  	</a-marker>
+	
+  	<a-entity camera></a-entity>
+    </a-scene>
+  </body>
+</html>
